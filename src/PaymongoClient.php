@@ -171,4 +171,31 @@ class PaymongoClient {
         $request = $this->createRequest('POST', '/payments', $payload);
         return $this->client->send($request);
     }
+
+    public function createPaymentMethod($type, $details = null, $billing = null, $metadata = null): Response {
+        $attributes = array(
+            'type' => $type,
+        );
+
+        if (!empty($details)) {
+            $attributes['details'] = $billing;
+        }
+
+        if (!empty($billing)) {
+            $attributes['billing'] = $billing;
+        }
+
+        if (!empty($metadata)) {
+            $attributes['metadata'] = $metadata;
+        }
+
+        $payload = array(
+            'data' => array(
+                'attributes' => $attributes,
+            ),
+        );
+
+        $request = $this->createRequest('POST', '/payment_methods', $payload);
+        return $this->client->send($request);
+    }
 }
