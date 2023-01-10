@@ -79,7 +79,7 @@ class PaymongoClient {
     }
     
     /**
-     * A function to get a Paymongo payment intent by ID
+     * A function to get a Paymongo payment intent object by ID
      *
      * @param  string $id
      * @return Response
@@ -126,6 +126,49 @@ class PaymongoClient {
         );
 
         $request = $this->createRequest('POST', '/sources', $payload);
+        return $this->client->send($request);
+    }
+    
+    /**
+     * A function to create a Paymongo payment object
+     *
+     * @param  int $amount
+     * @param  string $source_id
+     * @param  string $source_type
+     * @param  string $description
+     * @param  string $statement_descriptor
+     * @param  mixed $metadata
+     * @return Response
+     */
+    public function createPayment($amount, $source_id, $source_type, $description = null, $statement_descriptor = null, $metadata = null): Response {
+        $attributes = array(
+            'amount' => $amount * 100,
+            'currency' => 'PHP', // hard-coded for now
+            'source' => array(
+                'id' => $source_id,
+                'type' => $source_type,
+            ),
+        );
+
+        if (!empty($description)) {
+            $attributes['description'] = $description;
+        }
+
+        if (!empty($statement_descriptor)) {
+            $attributes['statement_descriptor'] = $statement_descriptor;
+        }
+
+        if (!empty($metadata)) {
+            $attributes['metadata'] = $metadata;
+        }
+
+        $payload = array(
+            'data' => array(
+                'attributes' => $attributes,
+            ),
+        );
+
+        $request = $this->createRequest('POST', '/payments', $payload);
         return $this->client->send($request);
     }
 }
