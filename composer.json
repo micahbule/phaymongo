@@ -1,0 +1,23 @@
+{
+    "name": "micahbule/phaymongo",
+    "description": "A Paymongo client written in PHP",
+    "type": "library",
+    "require": {
+        "guzzlehttp/guzzle": "7.5.x-dev"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "9"
+    },
+    "license": "GPL",
+    "autoload": {
+        "psr-4": {
+            "Paymongo\\Phaymongo\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Micah Bule"
+        }
+    ],
+    "minimum-stability": "dev"
+}
