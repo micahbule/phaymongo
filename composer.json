@@ -3,7 +3,7 @@
     "description": "A Paymongo client written in PHP",
     "type": "library",
     "require": {
-        "guzzlehttp/guzzle": "7.5.x-dev"
+        "guzzlehttp/guzzle": "^7.0"
     },
     "require-dev": {
         "phpunit/phpunit": "9"
@@ -19,5 +19,5 @@
             "name": "Micah Bule"
         }
     ],
-    "minimum-stability": "dev"
+    "minimum-stability": "stable"
 }
