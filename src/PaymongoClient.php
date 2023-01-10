@@ -106,7 +106,7 @@ class PaymongoClient {
             ),
         );
 
-        $request = $this->createRequest('POST', '/payment_intents/' . $payment_intent_id, $payload);
+        $request = $this->createRequest('POST', '/payment_intents/' . $payment_intent_id . '/attach', $payload);
         return $this->client->send($request);
     }
     
