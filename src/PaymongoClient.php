@@ -79,6 +79,17 @@ class PaymongoClient {
     }
     
     /**
+     * A function to get a Paymongo payment intent by ID
+     *
+     * @param  string $id
+     * @return Response
+     */
+    public function getPaymentIntent($id): Response {
+        $request = $this->createRequest('GET', '/payment_intents/' . $id);
+        return $this->client->send($request);
+    }
+    
+    /**
      * A function to create a Paymongo source object to use for transactions
      *
      * @param  int $amount The transaction amount
@@ -87,9 +98,9 @@ class PaymongoClient {
      * @param  string $failed_url
      * @param  object $billing
      * @param  object $metadata
-     * @return void
+     * @return Response
      */
-    public function createSource($amount, $type, $success_url, $failed_url, $billing = null, $metadata = null) {
+    public function createSource($amount, $type, $success_url, $failed_url, $billing = null, $metadata = null): Response {
         $attributes = array(
             'type' => $type,
             'amount' => $amount * 100,
