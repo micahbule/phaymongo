@@ -46,8 +46,17 @@ class PaymongoClient {
 
         return $request;
     }
-
-    public function createPaymentIntent(int $amount, array $payment_methods, string $description, array $metadata = null): Response {
+    
+    /**
+     * A function to create a Paymongo payment intent object to use for transactions
+     *
+     * @param  int $amount The transaction amount
+     * @param  string[] $payment_methods
+     * @param  string $description
+     * @param  mixed $metadata
+     * @return Response
+     */
+    public function createPaymentIntent($amount, $payment_methods, $description, $metadata = null): Response {
         $attributes = array(
             'amount' => $amount * 100,
             'payment_method_allowed' => $payment_methods,
@@ -66,6 +75,46 @@ class PaymongoClient {
         );
 
         $request = $this->createRequest('POST', '/payment_intents', $payload);
+        return $this->client->send($request);
+    }
+    
+    /**
+     * A function to create a Paymongo source object to use for transactions
+     *
+     * @param  int $amount The transaction amount
+     * @param  string $type
+     * @param  string $success_url
+     * @param  string $failed_url
+     * @param  object $billing
+     * @param  object $metadata
+     * @return void
+     */
+    public function createSource($amount, $type, $success_url, $failed_url, $billing = null, $metadata = null) {
+        $attributes = array(
+            'type' => $type,
+            'amount' => $amount * 100,
+            'currency' => 'PHP', // hard-coded for now
+            'redirect' => array(
+                'success' => $success_url,
+                'failed' => $failed_url,
+            ),
+        );
+
+        if (!empty($billing)) {
+            $attributes['billing'] = $billing;
+        }
+
+        if (!empty($metadata)) {
+            $attributes['metadata'] = $metadata;
+        }
+
+        $payload = array(
+            'data' => array(
+                'attributes' => $attributes,
+            ),
+        );
+
+        $request = $this->createRequest('POST', '/sources', $payload);
         return $this->client->send($request);
     }
 }
