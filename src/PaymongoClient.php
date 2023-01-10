@@ -79,6 +79,38 @@ class PaymongoClient {
     }
     
     /**
+     * A function to attach a Paymongo payment method to a payment intent object
+     *
+     * @param  string $payment_intent_id
+     * @param  string $payment_method_id
+     * @param  string $return_url
+     * @param  string $client_key
+     * @return Response
+     */
+    public function attachPaymentMethodToPaymentIntent($payment_intent_id, $payment_method_id, $return_url = null, $client_key = null): Response {
+        $attributes = array(
+            'payment_method' => $payment_method_id,
+        );
+
+        if (!empty($client_key)) {
+            $attributes['client_key'] = $client_key;
+        }
+
+        if (!empty($return_url)) {
+            $attributes['return_url'] = $return_url;
+        }
+
+        $payload = array(
+            'data' => array(
+                'attributes' => $attributes,
+            ),
+        );
+
+        $request = $this->createRequest('POST', '/payment_intents/' . $payment_intent_id, $payload);
+        return $this->client->send($request);
+    }
+    
+    /**
      * A function to get a Paymongo payment intent object by ID
      *
      * @param  string $id
@@ -171,7 +203,16 @@ class PaymongoClient {
         $request = $this->createRequest('POST', '/payments', $payload);
         return $this->client->send($request);
     }
-
+    
+    /**
+     * A function to create a Paymongo payment method object
+     *
+     * @param  string $type
+     * @param  mixed $details
+     * @param  mixed $billing
+     * @param  mixed $metadata
+     * @return Response
+     */
     public function createPaymentMethod($type, $details = null, $billing = null, $metadata = null): Response {
         $attributes = array(
             'type' => $type,
