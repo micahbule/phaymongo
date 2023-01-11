@@ -1,6 +1,9 @@
 # Phaymongo
 An unofficial simple API client for Paymongo written in PHP
 
+## Installation
+`composer require micahbule/phaymongo`
+
 ## Usage
 Start by importing your desired resource object and create a new instance using public and secret keys. For example, we want to create a payment intent.
 ```php
@@ -157,3 +160,12 @@ A function to create a Paymongo link resource.
 
 #### unarchive($id)
 * **id** - The link ID.
+
+## Why?
+First, why not? Second, we needed to standardize libraries between several products including:
+* [Payments via Paymongo for WooCommerce](https://wordpress.org/plugins/wc-paymongo-payment-gateway/#installation)
+* [Paymongo Payments](https://marketplace.magento.com/cyndertech-paymongo-gateway.html) -- ***to be updated***
+
+Plus, it's dev community contribution.
+
+Why Phaymongo? It's PHP + Paymongo. :)
