@@ -9,7 +9,17 @@ class Refund extends PaymongoClient {
     {
         $this->base_resource_key = 'refunds';
     }
-
+    
+    /**
+     * A function to create a Paymongo refund object
+     *
+     * @param  int $amount
+     * @param  string $payment_id
+     * @param  string $reason
+     * @param  string $notes
+     * @param  mixed $metadata
+     * @return Response
+     */
     public function create($amount, $payment_id, $reason, $notes = null, $metadata = null): Response {
         $attributes = array(
             'amount' => $amount * 100,
