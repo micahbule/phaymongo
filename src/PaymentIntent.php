@@ -19,10 +19,10 @@ class PaymentIntent extends PaymongoClient {
      * @param  mixed $metadata
      * @return Response
      */
-    public function create($amount, $payment_methods, $description, $metadata = null): Response {
+    public function create($amount, $payment_method_allowed, $description, $metadata = null): Response {
         $attributes = array(
             'amount' => $amount * 100,
-            'payment_method_allowed' => $payment_methods,
+            'payment_method_allowed' => $payment_method_allowed,
             'currency' => 'PHP', // hard-coded for now
             'description' => $description,    
         );
