@@ -73,3 +73,13 @@ it('can create a source with optional fields', function () {
 
     expect($response)->toBe(['success' => true]);
 });
+
+it('can retrieve a source by ID', function () {
+    $sourceMock = mock('Paymongo\Phaymongo\Source')->makePartial();
+    $sourceMock->shouldReceive('retrieveResourceById')
+        ->withArgs([1])
+        ->atLeast()
+        ->times(1);
+    
+    $sourceMock->retrieveById(1);
+});

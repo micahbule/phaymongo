@@ -12,16 +12,16 @@ Start by importing your desired resource object and create a new instance using 
 use Paymongo\Phaymongo\PaymentIntent;
 
 function pay() {
-    $paymentResourceClient = new PaymentIntent('YOUR_PUBLIC_KEY', 'YOUR_SECRET_KEY');
+    $paymentIntentClient = new PaymentIntent('YOUR_PUBLIC_KEY', 'YOUR_SECRET_KEY');
+    $paymentIntent = $paymentIntentClient->create(100, ['gcash', 'card']);
 
-    /** This returns an HTTP message object */
-    $response = $paymentResourceClient->create(100, ['gcash', 'card']);
-
-    /** To get the body of the response, just do the following */
-    $body = $response->json();
-
-    // do something with response
+    // do something with the payment intent
 }
+```
+By default, this returns the actual payment intent data from within the [`data` property](https://developers.paymongo.com/reference/the-payment-method-object) of the response payload.  
+If you want your client to return the original response payload, just pass the `unwrap` config with `false` value on the options array when you instantiate the client:
+```php
+$paymentIntentClient = new PaymentIntent('YOUR_PUBLIC_KEY', 'YOUR_SECRET_KEY', ['unwrap' => false]);
 ```
 
 The client throws an error if your request fails. You can handle this simply by wrapping it within a `try-catch` block.
@@ -30,15 +30,10 @@ use Paymongo\Phaymongo\PaymentIntent;
 
 function pay() {
     try {
-        $paymentResourceClient = new PaymentIntent('YOUR_PUBLIC_KEY', 'YOUR_SECRET_KEY');
+        $paymentIntentClient = new PaymentIntent('YOUR_PUBLIC_KEY', 'YOUR_SECRET_KEY');
+        $paymentIntent = $paymentIntentClient->create(100, ['gcash', 'card']);
 
-        /** This returns an HTTP message object */
-        $response = $paymentResourceClient->create(100, ['gcash', 'card']);
-
-        /** To get the body of the response, just do the following */
-        $body = $response->json();
-
-        // do something with response
+        // do something with the payment intent
     } catch ($e) {
         /** To get the body of a successful request but failed response, just do the following */
         $body = $e->getResponse()->json();
@@ -62,7 +57,27 @@ function pay() {
 * [Links](https://developers.paymongo.com/reference/links-resource)
 
 ## API Documentation
-All **fields in bold** are required fields whereas ***fields in italics*** are optional.
+All **fields in bold** are required fields whereas ***fields in italics*** are optional. Note that this library uses GuzzleHttp client set with the base Paymongo API URL so URLs below are relative.
+
+#### new PaymongoClient($public_key, $secret_key, $client_ops)
+All resource class (PaymentIntent, PaymentMethod, Source, etc.) extends this class. If for some reason you need to access resources manually, you can instantiate or extend this class and use the methods below.  
+
+##### Parameters
+* **public_key** - Your Paymongo Public Key
+* **secret_key** - Your Paymongo Secret Key
+* ***client_ops.unwrap*** - This is a boolean that determines whether your client will return the resource info nested in the data property of the original response payload. ***Default to true***.
+* ***client_ops.return_response*** - This is a boolean that determines if the client will return the original HTTP message object for further processing.
+##### Methods
+###### createRequest($method, $url, $payload, $use_public_key)
+Constructs a Request object to be sent by the HTTP client
+* **method** - The HTTP verb to use for the request
+* **url** - The path of the resource you want to send the request to (ex. /payment_intents).
+* ***payload*** - Any payload to be sent with the requests (ex. creating a resource)
+* ***use_public_key*** - A boolean value to instruct the client to use the public key to authenticate the request via headers. ***Default to false and uses secret key***.
+###### sendRequest($request, $request_opts)
+Takes in the Request object and executes the request to the Paymongo resource endpoint
+* **request** - Request object from `createRequest()` method
+* ***request_opts*** - Any Request options, if any. Refer [here for more info](https://docs.guzzlephp.org/en/stable/request-options.html).  
 
 ### [Payment Intent Resource](https://developers.paymongo.com/reference/the-payment-intent-object)
 #### create($amount, $payment_method_allowed, $description, $metadata)

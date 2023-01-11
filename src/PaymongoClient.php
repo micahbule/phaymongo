@@ -16,7 +16,7 @@ class PaymongoClient {
     protected $return_response = false;
     protected $unwrap = true;
 
-    public function __construct(string $public_key, string $secret_key, array $guzzle_ops = array(), $client_ops = array())
+    public function __construct(string $public_key, string $secret_key, $client_ops = array(), array $guzzle_ops = array())
     {
         $this->public_key = $public_key;
         $this->secret_key = $secret_key;
@@ -36,7 +36,7 @@ class PaymongoClient {
         }
     }
 
-    public function getAuthorizationHeader(bool $use_public_key = false) {
+    protected function getAuthorizationHeader(bool $use_public_key = false) {
         $key = $use_public_key ? $this->public_key : $this->secret_key;
 
         return 'Basic ' . base64_encode($key);
