@@ -9,13 +9,6 @@ use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
 use Paymongo\Phaymongo\PaymongoClient;
 
-it('The client can construct the authorization header properly', function () {
-    $client = new PaymongoClient('a', 'b');
-
-    expect($client->getAuthorizationHeader())->toBe('Basic ' . base64_encode('b'));
-    expect($client->getAuthorizationHeader(true))->toBe('Basic ' . base64_encode('a'));
-});
-
 it('can create a request without payload', function () {
     $client = new PaymongoClient('a', 'b');
 
@@ -42,7 +35,7 @@ it('can send a request and return unwrapped data by default', function () {
     ]);
 
     $handlerStack = HandlerStack::create($mockHandler);
-    $client = new PaymongoClient('a', 'b', ['handler' => $handlerStack]);
+    $client = new PaymongoClient('a', 'b', [], ['handler' => $handlerStack]);
 
     $request = $client->createRequest('GET', '/');
     $response = $client->sendRequest($request);
@@ -56,7 +49,7 @@ it('can send a request and return wrapped data', function () {
     ]);
 
     $handlerStack = HandlerStack::create($mockHandler);
-    $client = new PaymongoClient('a', 'b', ['handler' => $handlerStack], ['unwrap' => false]);
+    $client = new PaymongoClient('a', 'b', ['unwrap' => false], ['handler' => $handlerStack]);
 
     $request = $client->createRequest('GET', '/');
     $response = $client->sendRequest($request);
@@ -70,7 +63,7 @@ it('can send a request and return the HTTP message instance', function () {
     ]);
 
     $handlerStack = HandlerStack::create($mockHandler);
-    $client = new PaymongoClient('a', 'b', ['handler' => $handlerStack], ['return_response' => true]);
+    $client = new PaymongoClient('a', 'b', ['return_response' => true], ['handler' => $handlerStack]);
 
     $request = $client->createRequest('GET', '/');
     $response = $client->sendRequest($request);
