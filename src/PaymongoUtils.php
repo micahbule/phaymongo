@@ -89,4 +89,12 @@ class PaymongoUtils {
 
         return $billing_address;
     }
+
+    public static function constructPayload($attributes) {
+        return array(
+            'data' => array(
+                'attributes' => $attributes,
+            ),
+        );
+    }
 }

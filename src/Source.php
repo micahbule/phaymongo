@@ -5,6 +5,11 @@ namespace Paymongo\Phaymongo;
 use GuzzleHttp\Psr7\Response;
 
 class Source extends PaymongoClient {
+    public function __construct()
+    {
+        $this->base_resource_key = 'sources';
+    }
+
     /**
      * A function to create a Paymongo source object to use for transactions
      *
@@ -35,14 +40,8 @@ class Source extends PaymongoClient {
             $attributes['metadata'] = $metadata;
         }
 
-        $payload = array(
-            'data' => array(
-                'attributes' => $attributes,
-            ),
-        );
-
-        $request = $this->createRequest('POST', '/sources', $payload);
-        return $this->client->send($request);
+        $payload = PaymongoUtils::constructPayload($attributes);
+        return $this->createResource($payload);
     }
     
     /**
@@ -52,7 +51,6 @@ class Source extends PaymongoClient {
      * @return Response
      */
     public function retrieveById($id): Response {
-        $request = $this->createRequest('GET', '/sources/' . $id);
-        return $this->client->send($request);
+        return $this->retrieveResourceById($id);
     }
 }

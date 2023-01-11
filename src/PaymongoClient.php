@@ -12,6 +12,7 @@ class PaymongoClient {
     protected $public_key;
     protected $secret_key;
     protected $client;
+    protected $base_resource_key;
 
     public function __construct(string $public_key, string $secret_key, array $client_ops = array())
     {
@@ -45,5 +46,28 @@ class PaymongoClient {
         }
 
         return $request;
+    }
+    
+    /**
+     * A function to create a Paymongo resource object
+     *
+     * @param  mixed $payload
+     * @param  bool $use_public_key
+     * @return Response
+     */
+    public function createResource($payload, $use_public_key = false): Response {
+        $request = $this->createRequest('POST', '/' . $this->base_resource_key, $payload, $use_public_key);
+        return $this->client->send($request);
+    }
+
+    /**
+     * A function to get a Paymongo resource object by ID
+     *
+     * @param  string $id
+     * @return Response
+     */
+    public function retrieveResourceById($id): Response {
+        $request = $this->createRequest('GET', '/' . $this->base_resource_key .  '/' . $id);
+        return $this->client->send($request);
     }
 }
