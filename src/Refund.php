@@ -2,15 +2,8 @@
 
 namespace Paymongo\Phaymongo;
 
-use GuzzleHttp\Psr7\Response;
-
 class Refund extends PaymongoClient {
-    public function __construct($public_key, $secret_key, $guzzle_ops = array(), $client_ops = array())
-    {
-        $this->base_resource_key = 'refunds';
-
-        parent::__construct($public_key, $secret_key, $guzzle_ops, $client_ops);
-    }
+    protected $base_resource_key = 'refunds';
     
     /**
      * A function to create a Paymongo refund object
@@ -20,9 +13,9 @@ class Refund extends PaymongoClient {
      * @param  string $reason
      * @param  string $notes
      * @param  mixed $metadata
-     * @return Response
+     * @return mixed
      */
-    public function create($amount, $payment_id, $reason, $notes = null, $metadata = null): Response {
+    public function create($amount, $payment_id, $reason, $notes = null, $metadata = null) {
         $attributes = array(
             'amount' => $amount * 100,
             'payment_id' => $payment_id,
@@ -45,9 +38,9 @@ class Refund extends PaymongoClient {
      * A function to retrieve a Paymongo refund object by ID
      *
      * @param  string $id
-     * @return Response
+     * @return mixed
      */
-    public function retrieveById($id): Response {
+    public function retrieveById($id) {
         return $this->retrieveResourceById($id);
     }
 }
