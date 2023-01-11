@@ -20,7 +20,8 @@
     "minimum-stability": "stable",
     "require-dev": {
         "pestphp/pest": "^1.22",
-        "pestphp/pest-plugin-mock": "^1.0"
+        "pestphp/pest-plugin-mock": "^1.0",
+        "pestphp/pest-plugin-parallel": "^1.2"
     },
     "config": {
         "allow-plugins": {
