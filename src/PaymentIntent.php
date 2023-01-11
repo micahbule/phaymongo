@@ -5,6 +5,11 @@ namespace Paymongo\Phaymongo;
 use GuzzleHttp\Psr7\Response;
 
 class PaymentIntent extends PaymongoClient {
+    public function __construct()
+    {
+        $this->base_resource_key = 'payment_intents';
+    }
+
     /**
      * A function to create a Paymongo payment intent object to use for transactions
      *
@@ -14,10 +19,10 @@ class PaymentIntent extends PaymongoClient {
      * @param  mixed $metadata
      * @return Response
      */
-    public function create($amount, $payment_methods, $description, $metadata = null): Response {
+    public function create($amount, $payment_method_allowed, $description, $metadata = null): Response {
         $attributes = array(
             'amount' => $amount * 100,
-            'payment_method_allowed' => $payment_methods,
+            'payment_method_allowed' => $payment_method_allowed,
             'currency' => 'PHP', // hard-coded for now
             'description' => $description,    
         );
@@ -26,25 +31,18 @@ class PaymentIntent extends PaymongoClient {
             $attributes['metadata'] = $metadata;
         }
 
-        $payload = array(
-            'data' => array(
-                'attributes' => $attributes,
-            ),
-        );
-
-        $request = $this->createRequest('POST', '/payment_intents', $payload);
-        return $this->client->send($request);
+        $payload = PaymongoUtils::constructPayload($attributes);
+        return $this->createResource($payload);
     }
 
     /**
-     * A function to get a Paymongo payment intent object by ID
+     * A function to retrieve a Paymongo payment intent object by ID
      *
      * @param  string $id
      * @return Response
      */
     public function retrieveById($id): Response {
-        $request = $this->createRequest('GET', '/payment_intents/' . $id);
-        return $this->client->send($request);
+        return $this->retrieveResourceById($id);
     }
 
     /**
@@ -69,12 +67,7 @@ class PaymentIntent extends PaymongoClient {
             $attributes['return_url'] = $return_url;
         }
 
-        $payload = array(
-            'data' => array(
-                'attributes' => $attributes,
-            ),
-        );
-
+        $payload = PaymongoUtils::constructPayload($attributes);
         $request = $this->createRequest('POST', '/payment_intents/' . $payment_intent_id . '/attach', $payload);
         return $this->client->send($request);
     }

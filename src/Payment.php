@@ -5,6 +5,11 @@ namespace Paymongo\Phaymongo;
 use GuzzleHttp\Psr7\Response;
 
 class Payment extends PaymongoClient {
+    public function __construct()
+    {
+        $this->base_resource_key = 'payments';
+    }
+
     /**
      * A function to create a Paymongo payment object
      *
@@ -16,13 +21,13 @@ class Payment extends PaymongoClient {
      * @param  mixed $metadata
      * @return Response
      */
-    public function create($amount, $source_id, $source_type, $description = null, $statement_descriptor = null, $metadata = null): Response {
+    public function create($amount, $source_id, $description = null, $statement_descriptor = null, $metadata = null): Response {
         $attributes = array(
             'amount' => $amount * 100,
             'currency' => 'PHP', // hard-coded for now
             'source' => array(
                 'id' => $source_id,
-                'type' => $source_type,
+                'type' => 'source', // hard-coded for now
             ),
         );
 
@@ -38,14 +43,8 @@ class Payment extends PaymongoClient {
             $attributes['metadata'] = $metadata;
         }
 
-        $payload = array(
-            'data' => array(
-                'attributes' => $attributes,
-            ),
-        );
-
-        $request = $this->createRequest('POST', '/payments', $payload);
-        return $this->client->send($request);
+        $payload = PaymongoUtils::constructPayload($attributes);
+        return $this->createResource($payload);
     }
     
     /**
@@ -55,8 +54,7 @@ class Payment extends PaymongoClient {
      * @return Response
      */
     public function retrieveById($id): Response {
-        $request = $this->createRequest('GET', '/payments/' . $id);
-        return $this->client->send($request);
+        return $this->retrieveResourceById($id);
     }
     
     /**

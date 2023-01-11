@@ -4,32 +4,31 @@ namespace Paymongo\Phaymongo;
 
 use GuzzleHttp\Psr7\Response;
 
-class PaymentMethod extends PaymongoClient {
+class Refund extends PaymongoClient {
     public function __construct()
     {
-        $this->base_resource_key = 'payment_methods';
+        $this->base_resource_key = 'refunds';
     }
-
+    
     /**
-     * A function to create a Paymongo payment method object
+     * A function to create a Paymongo refund object
      *
-     * @param  string $type
-     * @param  mixed $details
-     * @param  mixed $billing
+     * @param  int $amount
+     * @param  string $payment_id
+     * @param  string $reason
+     * @param  string $notes
      * @param  mixed $metadata
      * @return Response
      */
-    public function create($type, $details = null, $billing = null, $metadata = null): Response {
+    public function create($amount, $payment_id, $reason, $notes = null, $metadata = null): Response {
         $attributes = array(
-            'type' => $type,
+            'amount' => $amount * 100,
+            'payment_id' => $payment_id,
+            'reason' => $reason,
         );
 
-        if (!empty($details)) {
-            $attributes['details'] = $billing;
-        }
-
-        if (!empty($billing)) {
-            $attributes['billing'] = $billing;
+        if (!empty($notes)) {
+            $attributes['notes'] = $notes;
         }
 
         if (!empty($metadata)) {
@@ -39,9 +38,9 @@ class PaymentMethod extends PaymongoClient {
         $payload = PaymongoUtils::constructPayload($attributes);
         return $this->createResource($payload);
     }
-    
+
     /**
-     * A function to retrieve a Paymongo payment method object by ID
+     * A function to retrieve a Paymongo refund object by ID
      *
      * @param  string $id
      * @return Response
