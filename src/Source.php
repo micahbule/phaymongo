@@ -2,15 +2,8 @@
 
 namespace Paymongo\Phaymongo;
 
-use GuzzleHttp\Psr7\Response;
-
 class Source extends PaymongoClient {
-    public function __construct($public_key, $secret_key, $guzzle_ops = array(), $client_ops = array())
-    {
-        $this->base_resource_key = 'sources';
-
-        parent::__construct($public_key, $secret_key, $guzzle_ops, $client_ops);
-    }
+    protected $base_resource_key = 'sources';
 
     /**
      * A function to create a Paymongo source object to use for transactions
@@ -21,9 +14,9 @@ class Source extends PaymongoClient {
      * @param  string $failed_url
      * @param  object $billing
      * @param  object $metadata
-     * @return Response
+     * @return mixed
      */
-    public function create($amount, $type, $success_url, $failed_url, $billing = null, $metadata = null): Response {
+    public function create($amount, $type, $success_url, $failed_url, $billing = null, $metadata = null) {
         $attributes = array(
             'type' => $type,
             'amount' => $amount * 100,
@@ -50,9 +43,9 @@ class Source extends PaymongoClient {
      * A function to retrieve a Paymongo source object by ID
      *
      * @param  string $id
-     * @return Response
+     * @return mixed
      */
-    public function retrieveById($id): Response {
+    public function retrieveById($id) {
         return $this->retrieveResourceById($id);
     }
 }
