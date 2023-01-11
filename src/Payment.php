@@ -2,15 +2,8 @@
 
 namespace Paymongo\Phaymongo;
 
-use GuzzleHttp\Psr7\Response;
-
 class Payment extends PaymongoClient {
-    public function __construct($public_key, $secret_key, $guzzle_ops = array(), $client_ops = array())
-    {
-        $this->base_resource_key = 'payments';
-
-        parent::__construct($public_key, $secret_key, $guzzle_ops, $client_ops);
-    }
+    protected $base_resource_key = 'payments';
 
     /**
      * A function to create a Paymongo payment object
@@ -21,9 +14,9 @@ class Payment extends PaymongoClient {
      * @param  string $description
      * @param  string $statement_descriptor
      * @param  mixed $metadata
-     * @return Response
+     * @return mixed
      */
-    public function create($amount, $source_id, $description = null, $statement_descriptor = null, $metadata = null): Response {
+    public function create($amount, $source_id, $description = null, $statement_descriptor = null, $metadata = null) {
         $attributes = array(
             'amount' => $amount * 100,
             'currency' => 'PHP', // hard-coded for now
@@ -53,9 +46,9 @@ class Payment extends PaymongoClient {
      * A function to retrieve a Paymongo payment object by ID
      *
      * @param  string $id
-     * @return Response
+     * @return mixed
      */
-    public function retrieveById($id): Response {
+    public function retrieveById($id) {
         return $this->retrieveResourceById($id);
     }
     
@@ -65,9 +58,9 @@ class Payment extends PaymongoClient {
      * @param  int $before
      * @param  int $after
      * @param  int $limit
-     * @return Response
+     * @return mixed
      */
-    public function retrieveAll($before = null, $after = null, $limit = null): Response {
+    public function retrieveAll($before = null, $after = null, $limit = null) {
         $queries = array();
 
         if (!empty($before)) {
@@ -75,11 +68,11 @@ class Payment extends PaymongoClient {
         }
 
         if (!empty($after)) {
-            $queries['before'] = $after;
+            $queries['after'] = $after;
         }
 
         if (!empty($limit)) {
-            $queries['before'] = $limit;
+            $queries['limit'] = $limit;
         }
 
         $request = $this->createRequest('GET', '/payments');

@@ -2,15 +2,8 @@
 
 namespace Paymongo\Phaymongo;
 
-use GuzzleHttp\Psr7\Response;
-
 class PaymentIntent extends PaymongoClient {
-    public function __construct($public_key, $secret_key, $guzzle_ops = array(), $client_ops = array())
-    {
-        $this->base_resource_key = 'payment_intents';
-
-        parent::__construct($public_key, $secret_key, $guzzle_ops, $client_ops);
-    }
+    protected $base_resource_key = 'payment_intents';
 
     /**
      * A function to create a Paymongo payment intent object to use for transactions
@@ -19,15 +12,18 @@ class PaymentIntent extends PaymongoClient {
      * @param  string[] $payment_methods
      * @param  string $description
      * @param  mixed $metadata
-     * @return Response
+     * @return mixed
      */
-    public function create($amount, $payment_method_allowed, $description, $metadata = null): Response {
+    public function create($amount, $payment_method_allowed, $description = null, $metadata = null) {
         $attributes = array(
             'amount' => $amount * 100,
             'payment_method_allowed' => $payment_method_allowed,
             'currency' => 'PHP', // hard-coded for now
-            'description' => $description,    
         );
+
+        if (!empty($description)) {
+            $attributes['description'] = $description;
+        }
 
         if (!empty($metadata)) {
             $attributes['metadata'] = $metadata;
@@ -41,9 +37,9 @@ class PaymentIntent extends PaymongoClient {
      * A function to retrieve a Paymongo payment intent object by ID
      *
      * @param  string $id
-     * @return Response
+     * @return mixed
      */
-    public function retrieveById($id): Response {
+    public function retrieveById($id) {
         return $this->retrieveResourceById($id);
     }
 
@@ -54,9 +50,9 @@ class PaymentIntent extends PaymongoClient {
      * @param  string $payment_method_id
      * @param  string $return_url
      * @param  string $client_key
-     * @return Response
+     * @return mixed
      */
-    public function attachPaymentMethod($payment_intent_id, $payment_method_id, $return_url = null, $client_key = null): Response {
+    public function attachPaymentMethod($payment_intent_id, $payment_method_id, $return_url = null, $client_key = null) {
         $attributes = array(
             'payment_method' => $payment_method_id,
         );

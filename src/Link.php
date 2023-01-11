@@ -2,17 +2,10 @@
 
 namespace Paymongo\Phaymongo;
 
-use GuzzleHttp\Psr7\Response;
-
 class Link extends PaymongoClient {
-    public function __construct($public_key, $secret_key, $guzzle_ops = array(), $client_ops = array())
-    {
-        $this->base_resource_key = 'links';
+    protected $base_resource_key = 'links';
 
-        parent::__construct($public_key, $secret_key, $guzzle_ops, $client_ops);
-    }
-
-    public function create($amount, $description, $remarks = null): Response {
+    public function create($amount, $description, $remarks = null) {
         $attributes = array(
             'amount' => $amount,
             'description' => $description,
@@ -26,11 +19,11 @@ class Link extends PaymongoClient {
         return $this->createResource($payload);
     }
 
-    public function retrieveById($id): Response {
+    public function retrieveById($id) {
         return $this->retrieveResourceById($id);
     }
 
-    public function retrieveByReferenceNumber($refNum): Response {
+    public function retrieveByReferenceNumber($refNum) {
         $request = $this->createRequest('GET', '/' . $this->base_resource_key);
         return $this->sendRequest($request, array('query' => array('reference_number' => $refNum)));
     }

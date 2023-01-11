@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @runInSeparateProcess
+ */
+
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
@@ -83,9 +87,11 @@ it('can create a resource', function () {
     $client->shouldReceive('createRequest')
         ->withArgs(['POST', '/', $payload, false])
         ->atLeast()
-        ->times(1);
+        ->times(1)
+        ->andReturn(true);
 
     $client->shouldReceive('sendRequest')
+        ->withArgs([true, []])
         ->atLeast()
         ->times(1);
 
@@ -100,9 +106,11 @@ it('can retrieve a resource by ID', function () {
     $client->shouldReceive('createRequest')
         ->withArgs(['GET', '//' . $id])
         ->atLeast()
-        ->times(1);
+        ->times(1)
+        ->andReturn(true);
 
     $client->shouldReceive('sendRequest')
+        ->withArgs([true, []])
         ->atLeast()
         ->times(1);
 
