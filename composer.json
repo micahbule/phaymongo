@@ -6,9 +6,6 @@
     "require": {
         "guzzlehttp/guzzle": "^7.0"
     },
-    "require-dev": {
-        "phpunit/phpunit": "9"
-    },
     "license": "GPL-3.0-or-later",
     "autoload": {
         "psr-4": {
@@ -20,5 +17,14 @@
             "name": "Micah Bule"
         }
     ],
-    "minimum-stability": "stable"
+    "minimum-stability": "stable",
+    "require-dev": {
+        "pestphp/pest": "^1.22",
+        "pestphp/pest-plugin-mock": "^1.0"
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    }
 }

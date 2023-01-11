@@ -1,70 +1,110 @@
-<?php declare(strict_types=1);
+<?php
 
-use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
 use Paymongo\Phaymongo\PaymongoClient;
-use PHPUnit\Framework\TestCase;
 
-final class PaymongoClientTest extends TestCase {
-    public function testGetAuthorizationHeader(): void {
-        $client = new PaymongoClient('a', 'b');
+it('The client can construct the authorization header properly', function () {
+    $client = new PaymongoClient('a', 'b');
 
-        $this->assertSame($client->getAuthorizationHeader(), 'Basic ' . base64_encode('b'));
-        $this->assertSame($client->getAuthorizationHeader(true), 'Basic ' . base64_encode('a'));
-    }
+    expect($client->getAuthorizationHeader())->toBe('Basic ' . base64_encode('b'));
+    expect($client->getAuthorizationHeader(true))->toBe('Basic ' . base64_encode('a'));
+});
 
-    public function testCreateRequest(): void {
-        $client = new PaymongoClient('a', 'b');
+it('can create a request without payload', function () {
+    $client = new PaymongoClient('a', 'b');
 
-        $payload = array(
-            'data' => array(
-                'attributes' => array(
-                    'amount' => 10000,
-                    'payment_method_allowed' => array('gcash', 'credit_card', 'paymaya'),
-                    'currency' => 'PHP', // hard-coded for now
-                    'description' => 'Sample Description',
-                ),
-            ),
-        );
+    $request = $client->createRequest('GET', '/');
 
-        $request = $client->createRequest('POST', '/payment_intents', $payload);
-        $body = $request->getBody();
+    expect($request->hasHeader('Authorization'))->toBeTrue();
+    expect($request->getHeader('Authorization')[0])->toBe('Basic ' . base64_encode('b'));
+    expect((string) $request->getBody())->toBe('');
+});
 
-        $this->assertTrue($request->hasHeader('Authorization'));
-        $this->assertSame($request->getHeader('Authorization')[0], 'Basic ' . base64_encode('b'));
-        $this->assertSame($body->getContents(), json_encode($payload));
-    }
+it('can create a request with payload', function () {
+    $client = new PaymongoClient('a', 'b');
 
-    public function testSuccessfullyCreatePaymentIntent(): void {
-        $mock = new MockHandler([
-            new Response(200, ['Content-Type' => 'application/json'], json_encode(array('success' => true))),
-        ]);
+    $request = $client->createRequest('POST', '/', ['foo' => 'bar']);
 
-        $handlerStack = HandlerStack::create($mock);
+    expect($request->hasHeader('Authorization'))->toBeTrue();
+    expect($request->getHeader('Authorization')[0])->toBe('Basic ' . base64_encode('b'));
+    expect((string) $request->getBody())->toBe('{"foo":"bar"}');
+});
 
-        $client = new PaymongoClient('a', 'b', array('handler' => $handlerStack));
+it('can send a request and return unwrapped data by default', function () {
+    $mockHandler = new MockHandler([
+        new Response(200, ['Content-Type' => 'application/json'], '{"data":"bar"}'),
+    ]);
 
-        $response = $client->createPaymentIntent(10000, array('gcash', 'credit_card', 'paymaya'), 'Sample Description');
+    $handlerStack = HandlerStack::create($mockHandler);
+    $client = new PaymongoClient('a', 'b', ['handler' => $handlerStack]);
 
-        $this->assertSame($response->getBody()->getContents(), '{"success":true}');
-    }
+    $request = $client->createRequest('GET', '/');
+    $response = $client->sendRequest($request);
 
-    public function testUnsuccessfullyCreatePaymentIntent(): void {
-        $mock = new MockHandler([
-            new Response(400, ['Content-Type' => 'application/json'], json_encode(array('success' => false, 'errors' => array()))),
-        ]);
+    expect($response)->toBe('bar');
+});
 
-        $handlerStack = HandlerStack::create($mock);
+it('can send a request and return wrapped data', function () {
+    $mockHandler = new MockHandler([
+        new Response(200, ['Content-Type' => 'application/json'], '{"data":"bar"}'),
+    ]);
 
-        $client = new PaymongoClient('a', 'b', array('handler' => $handlerStack));
+    $handlerStack = HandlerStack::create($mockHandler);
+    $client = new PaymongoClient('a', 'b', ['handler' => $handlerStack], ['unwrap' => false]);
 
-        try {
-            $response = $client->createPaymentIntent(10000, array('gcash', 'credit_card', 'paymaya'), 'Sample Description');
-        } catch (ClientException $e) {
-            $response = $e->getResponse();
-            $this->assertSame($response->getBody()->getContents(), '{"success":false,"errors":[]}');
-        }
-    }
-}
+    $request = $client->createRequest('GET', '/');
+    $response = $client->sendRequest($request);
+
+    expect($response)->toBe(['data' => 'bar']);
+});
+
+it('can send a request and return the HTTP message instance', function () {
+    $mockHandler = new MockHandler([
+        new Response(200, ['Content-Type' => 'application/json'], '{"data":"bar"}'),
+    ]);
+
+    $handlerStack = HandlerStack::create($mockHandler);
+    $client = new PaymongoClient('a', 'b', ['handler' => $handlerStack], ['return_response' => true]);
+
+    $request = $client->createRequest('GET', '/');
+    $response = $client->sendRequest($request);
+
+    expect($response)->toBeInstanceOf(Response::class);
+    expect($response->getBody()->__toString())->toBe('{"data":"bar"}');
+});
+
+it('can create a resource', function () {
+    $client = mock('Paymongo\Phaymongo\PaymongoClient')->makePartial();
+
+    $payload = ['data' => 'bar'];
+
+    $client->shouldReceive('createRequest')
+        ->withArgs(['POST', '/', $payload, false])
+        ->atLeast()
+        ->times(1);
+
+    $client->shouldReceive('sendRequest')
+        ->atLeast()
+        ->times(1);
+
+    $client->createResource($payload);
+});
+
+it('can retrieve a resource by ID', function () {
+    $client = mock('Paymongo\Phaymongo\PaymongoClient')->makePartial();
+
+    $id = 1;
+
+    $client->shouldReceive('createRequest')
+        ->withArgs(['GET', '//' . $id])
+        ->atLeast()
+        ->times(1);
+
+    $client->shouldReceive('sendRequest')
+        ->atLeast()
+        ->times(1);
+
+    $client->retrieveResourceById($id);
+});

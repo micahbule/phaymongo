@@ -4,7 +4,6 @@ namespace Paymongo\Phaymongo;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Utils;
 
 define('PAYMONGO_BASE_URL', 'https://api.paymongo.com/v1');
@@ -33,7 +32,7 @@ class PaymongoClient {
         $this->client = $client;
 
         foreach ($final_client_ops as $key => $value){
-            $this[$key] = $value;
+            $this->{$key} = $value;
         }
     }
 
