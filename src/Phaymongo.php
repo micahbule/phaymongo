@@ -1,5 +1,7 @@
 <?php
 
+namespace Paymongo\Phaymongo;
+
 use Paymongo\Phaymongo\Link;
 use Paymongo\Phaymongo\Payment;
 use Paymongo\Phaymongo\PaymentIntent;
