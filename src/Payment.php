@@ -5,9 +5,11 @@ namespace Paymongo\Phaymongo;
 use GuzzleHttp\Psr7\Response;
 
 class Payment extends PaymongoClient {
-    public function __construct()
+    public function __construct($public_key, $secret_key, $guzzle_ops = array(), $client_ops = array())
     {
         $this->base_resource_key = 'payments';
+
+        parent::__construct($public_key, $secret_key, $guzzle_ops, $client_ops);
     }
 
     /**
@@ -81,6 +83,6 @@ class Payment extends PaymongoClient {
         }
 
         $request = $this->createRequest('GET', '/payments');
-        return $this->client->send($request, ['query' => $queries]);
+        return $this->sendRequest($request, ['query' => $queries]);
     }
 }

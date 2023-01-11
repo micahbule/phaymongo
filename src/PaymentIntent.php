@@ -5,9 +5,11 @@ namespace Paymongo\Phaymongo;
 use GuzzleHttp\Psr7\Response;
 
 class PaymentIntent extends PaymongoClient {
-    public function __construct()
+    public function __construct($public_key, $secret_key, $guzzle_ops = array(), $client_ops = array())
     {
         $this->base_resource_key = 'payment_intents';
+
+        parent::__construct($public_key, $secret_key, $guzzle_ops, $client_ops);
     }
 
     /**
@@ -69,6 +71,6 @@ class PaymentIntent extends PaymongoClient {
 
         $payload = PaymongoUtils::constructPayload($attributes);
         $request = $this->createRequest('POST', '/payment_intents/' . $payment_intent_id . '/attach', $payload);
-        return $this->client->send($request);
+        return $this->sendRequest($request);
     }
 }

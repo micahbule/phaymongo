@@ -5,6 +5,7 @@ namespace Paymongo\Phaymongo;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Utils;
 
 define('PAYMONGO_BASE_URL', 'https://api.paymongo.com/v1');
 
@@ -13,19 +14,27 @@ class PaymongoClient {
     protected $secret_key;
     protected $client;
     protected $base_resource_key;
+    protected $return_response = false;
+    protected $unwrap = true;
 
-    public function __construct(string $public_key, string $secret_key, array $client_ops = array())
+    public function __construct(string $public_key, string $secret_key, array $guzzle_ops = array(), $client_ops = array())
     {
         $this->public_key = $public_key;
         $this->secret_key = $secret_key;
 
-        $default_client_ops = array(
+        $default_guzzle_ops = array(
             'base_uri' => PAYMONGO_BASE_URL,
         );
         
-        $client = new Client(array_merge($default_client_ops, $client_ops));
+        $client = new Client(array_merge($default_guzzle_ops, $guzzle_ops));
+
+        $final_client_ops = array_merge(array(), $client_ops);
 
         $this->client = $client;
+
+        foreach ($final_client_ops as $key => $value){
+            $this[$key] = $value;
+        }
     }
 
     public function getAuthorizationHeader(bool $use_public_key = false) {
@@ -47,27 +56,41 @@ class PaymongoClient {
 
         return $request;
     }
+
+    public function sendRequest($request, $request_opts = []) {
+        $response = $this->client->sendRequest($request, $request_opts);
+
+        if ($this->return_response) return $response;
+
+        $json = Utils::jsonDecode($response->getBody()->__toString(), true);
+
+        if (!$this->unwrap) return $json;
+
+        return $json['data'];
+    }
     
     /**
      * A function to create a Paymongo resource object
      *
      * @param  mixed $payload
      * @param  bool $use_public_key
-     * @return Response
+     * @param  mixed $request_ops
+     * @return mixed
      */
-    public function createResource($payload, $use_public_key = false): Response {
+    public function createResource($payload, $use_public_key = false, $request_ops = []): mixed {
         $request = $this->createRequest('POST', '/' . $this->base_resource_key, $payload, $use_public_key);
-        return $this->client->send($request);
+        return $this->sendRequest($request, $request_ops);
     }
 
     /**
      * A function to get a Paymongo resource object by ID
      *
      * @param  string $id
-     * @return Response
+     * @param  mixed $request_ops
+     * @return mixed
      */
-    public function retrieveResourceById($id): Response {
+    public function retrieveResourceById($id, $request_ops = []): mixed {
         $request = $this->createRequest('GET', '/' . $this->base_resource_key .  '/' . $id);
-        return $this->client->send($request);
+        return $this->sendRequest($request, $request_ops);
     }
 }

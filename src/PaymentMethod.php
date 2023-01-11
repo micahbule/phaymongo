@@ -5,9 +5,11 @@ namespace Paymongo\Phaymongo;
 use GuzzleHttp\Psr7\Response;
 
 class PaymentMethod extends PaymongoClient {
-    public function __construct()
+    public function __construct($public_key, $secret_key, $guzzle_ops = array(), $client_ops = array())
     {
         $this->base_resource_key = 'payment_methods';
+
+        parent::__construct($public_key, $secret_key, $guzzle_ops, $client_ops);
     }
 
     /**
