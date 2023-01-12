@@ -76,7 +76,7 @@ class PaymongoClient {
      * @param  mixed $request_ops
      * @return mixed
      */
-    public function createResource($payload, $use_public_key = false, $request_ops = []): mixed {
+    public function createResource($payload, $use_public_key = false, $request_ops = []) {
         $request = $this->createRequest('POST', '/' . $this->base_resource_key, $payload, $use_public_key);
         return $this->sendRequest($request, $request_ops);
     }
@@ -88,7 +88,7 @@ class PaymongoClient {
      * @param  mixed $request_ops
      * @return mixed
      */
-    public function retrieveResourceById($id, $request_ops = []): mixed {
+    public function retrieveResourceById($id, $request_ops = []) {
         $request = $this->createRequest('GET', '/' . $this->base_resource_key .  '/' . $id);
         return $this->sendRequest($request, $request_ops);
     }
