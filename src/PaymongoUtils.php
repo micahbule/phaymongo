@@ -7,10 +7,14 @@ class PaymongoUtils {
         return isset($value) && $value !== '';
     }
 
+    public static function getOrderClassType($order, $type) {
+        return $type === 'woocommerce' ? 'WooCommerceOrder' : 'MagentoOrder';
+    }
+
     public static function generateBillingObject($order, $type) {
         $billing = array();
 
-        $orderClassType = $type === 'woocommerce' ? 'WooCommerceOrder' : 'MagentoOrder';
+        $orderClassType = self::getOrderClassType($order, $type);
         $orderClass = new $orderClassType($order);
 
         $billing_first_name = $orderClass->getFirstName();
@@ -36,7 +40,7 @@ class PaymongoUtils {
             $billing['phone'] = $billing_phone;
         }
 
-        $billing_address = self::generateBillingAddress($orderClass);
+        $billing_address = self::generateBillingAddress($order, $type);
 
         if (count($billing_address) > 0) {
             $billing['address'] = $billing_address;
@@ -45,45 +49,48 @@ class PaymongoUtils {
         return $billing;
     }
 
-    public static function generateBillingAddress($order) {
+    public static function generateBillingAddress($order, $type) {
+        $orderClassType = self::getOrderClassType($order, $type);
+        $orderClass = new $orderClassType($order);
+
         $billing_address = array();
 
-        $billing_address_1 = $order->getAddress1();
+        $billing_address_1 = $orderClass->getAddress1();
         $has_billing_address_1 = self::is_billing_value_set($billing_address_1);
 
         if ($has_billing_address_1) {
             $billing_address['line1'] = $billing_address_1;
         }
 
-        $billing_address_2 = $order->getAddress2();
+        $billing_address_2 = $orderClass->getAddress2();
         $has_billing_address_2 = self::is_billing_value_set($billing_address_2);
 
         if ($has_billing_address_2) {
             $billing_address['line2'] = $billing_address_2;
         }
 
-        $billing_city = $order->getCity();
+        $billing_city = $orderClass->getCity();
         $has_billing_city = self::is_billing_value_set($billing_city);
 
         if ($has_billing_city) {
             $billing_address['city'] = $billing_city;
         }
 
-        $billing_state = $order->getState();
+        $billing_state = $orderClass->getState();
         $has_billing_state = self::is_billing_value_set($billing_state);
 
         if ($has_billing_state) {
             $billing_address['state'] = $billing_state;
         }
 
-        $billing_country = $order->getCountry();
+        $billing_country = $orderClass->getCountry();
         $has_billing_country = self::is_billing_value_set($billing_country);
 
         if ($has_billing_country) {
             $billing_address['country'] = $billing_country;
         }
 
-        $billing_postcode = $order->getPostalCode();
+        $billing_postcode = $orderClass->getPostalCode();
         $has_billing_postcode = self::is_billing_value_set($billing_postcode);
 
         if ($has_billing_postcode) {
