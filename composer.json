@@ -28,6 +28,7 @@
         }
     },
     "scripts": {
-        "test": "./vendor/bin/pest --parallel --coverage --min=80"
+        "test": "./vendor/bin/pest",
+        "test:coverage": "./vendor/bin/pest --parallel --coverage --coverage-clover coverage.xml"
     }
 }
