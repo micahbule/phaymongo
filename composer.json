@@ -28,6 +28,6 @@
         }
     },
     "scripts": {
-        "test": "./vendor/bin/pest --parallel"
+        "test": "./vendor/bin/pest --parallel --coverage --min=80"
     }
 }
