@@ -2,19 +2,31 @@
 
 namespace Paymongo\Phaymongo;
 
+use Exception;
+
 class PaymongoUtils {
     public static function is_billing_value_set($value) {
         return isset($value) && $value !== '';
     }
 
-    public static function getOrderClassType($order, $type) {
-        return $type === 'woocommerce' ? 'WooCommerceOrder' : 'MagentoOrder';
+    public static function getOrderClassType($type) {
+        switch ($type) {
+            case 'woocommerce': {
+                return 'WooCommerceOrder';
+            }
+            case 'magento': {
+                return 'MagentoOrder';
+            }
+            default: {
+                throw new Exception('Invalid order class type');
+            }
+        }
     }
 
     public static function generateBillingObject($order, $type) {
         $billing = array();
 
-        $orderClassType = self::getOrderClassType($order, $type);
+        $orderClassType = self::getOrderClassType($type);
         $orderClass = new $orderClassType($order);
 
         $billing_first_name = $orderClass->getFirstName();
@@ -50,7 +62,7 @@ class PaymongoUtils {
     }
 
     public static function generateBillingAddress($order, $type) {
-        $orderClassType = self::getOrderClassType($order, $type);
+        $orderClassType = self::getOrderClassType($type);
         $orderClass = new $orderClassType($order);
 
         $billing_address = array();
