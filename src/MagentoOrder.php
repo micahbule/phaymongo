@@ -2,7 +2,7 @@
 
 namespace Paymongo\Phaymongo;
 
-class MagentoOrder implements BillingGeneratorInterface {
+class MagentoOrder extends BaseOrder {
     protected $order;
     protected $billing_address;
 
@@ -14,51 +14,51 @@ class MagentoOrder implements BillingGeneratorInterface {
 
     public function getFirstName()
     {
-        $this->billing_address->getFirstName();
+        return $this->billing_address->getFirstName();
     }
 
     public function getLastName()
     {
-        $this->billing_address->getLastName();
+        return $this->billing_address->getLastName();
     }
 
     public function getEmail()
     {
-        $this->billing_address->getEmail();
+        return $this->billing_address->getEmail();
     }
 
     public function getPhone()
     {
-        $this->billing_address->getTelephone();
+        return $this->billing_address->getTelephone();
     }
 
     public function getAddress1()
     {
-        $this->billing_address->getStreetLine(1);
+        return $this->billing_address->getStreetLine(1);
     }
 
     public function getAddress2()
     {
-        $this->billing_address->getStreetLine(2);
+        return $this->billing_address->getStreetLine(2);
     }
 
     public function getCity()
     {
-        $this->billing_address->getCity();
+        return $this->billing_address->getCity();
     }
 
     public function getState()
     {
-        $this->billing_address->getRegion();
+        return $this->billing_address->getRegion();
     }
 
     public function getCountry()
     {
-        $this->billing_address->getCountryId();
+        return $this->billing_address->getCountryId();
     }
 
     public function getPostalCode()
     {
-        $this->billing_address->getPostcode();
+        return $this->billing_address->getPostcode();
     }
 }

@@ -1,6 +1,8 @@
 # Phaymongo
 An unofficial simple API client for Paymongo written in PHP
 
+[![codecov](https://codecov.io/gh/micahbule/phaymongo/branch/feat-magento-woocommerce-helpers/graph/badge.svg?token=G3CXPN9NDY)](https://codecov.io/gh/micahbule/phaymongo)
+
 ## Installation
 `composer require micahbule/phaymongo`
 
