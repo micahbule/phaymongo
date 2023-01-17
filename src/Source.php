@@ -16,11 +16,11 @@ class Source extends PaymongoClient {
      * @param  object $metadata
      * @return mixed
      */
-    public function create($amount, $type, $success_url, $failed_url, $billing = null, $metadata = null) {
+    public function create($amount, $type, $success_url, $failed_url, $billing = null, $metadata = null, $currency = 'PHP') {
         $attributes = array(
             'type' => $type,
             'amount' => $amount * 100,
-            'currency' => 'PHP', // hard-coded for now
+            'currency' => $currency,
             'redirect' => array(
                 'success' => $success_url,
                 'failed' => $failed_url,
