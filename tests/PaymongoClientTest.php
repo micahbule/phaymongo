@@ -4,10 +4,13 @@
  * @runInSeparateProcess
  */
 
+use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use Paymongo\Phaymongo\PaymongoClient;
+use Paymongo\Phaymongo\PaymongoException;
 
 it('can create a request without payload', function () {
     $client = new PaymongoClient('a', 'b');
@@ -71,6 +74,38 @@ it('can send a request and return the HTTP message instance', function () {
     expect($response)->toBeInstanceOf(Response::class);
     expect($response->getBody()->__toString())->toBe('{"data":"bar"}');
 });
+
+it('can send a request and throw a paymongo exception', function () {
+    $mockHandler = new MockHandler([
+        new ClientException('Some error happened', new Request('GET', '/'), new Response(400, ['Content-Type' => 'application/json'], '{"errors":[{"detail": "some error"}]}')),
+    ]);
+
+    $handlerStack = HandlerStack::create($mockHandler);
+    $client = new PaymongoClient('a', 'b', [], ['handler' => $handlerStack]);
+
+    $request = $client->createRequest('GET', '/');
+    try {
+        $client->sendRequest($request);
+    } catch (PaymongoException $e) {
+        $formattedMessages = $e->format_errors();
+
+        expect($formattedMessages[0])->toBe('some error');
+
+        throw $e;
+    }
+})->throws(PaymongoException::class);
+
+it('can send a request and throw a client exception', function () {
+    $mockHandler = new MockHandler([
+        new ClientException('Some error happened', new Request('GET', '/'), new Response(400, ['Content-Type' => 'application/json'], '{}')),
+    ]);
+
+    $handlerStack = HandlerStack::create($mockHandler);
+    $client = new PaymongoClient('a', 'b', [], ['handler' => $handlerStack]);
+
+    $request = $client->createRequest('GET', '/');
+    $client->sendRequest($request);
+})->throws(ClientException::class);
 
 it('can create a resource', function () {
     $client = mock('Paymongo\Phaymongo\PaymongoClient')->makePartial();
