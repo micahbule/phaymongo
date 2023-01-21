@@ -3,6 +3,7 @@
 namespace Paymongo\Phaymongo;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Utils;
 
@@ -57,15 +58,25 @@ class PaymongoClient {
     }
 
     public function sendRequest($request, $request_opts = []) {
-        $response = $this->client->sendRequest($request, $request_opts);
+        try {
+            $response = $this->client->sendRequest($request, $request_opts);
+    
+            if ($this->return_response) return $response;
+    
+            $json = Utils::jsonDecode($response->getBody()->__toString(), true);
+    
+            if (!$this->unwrap) return $json;
+    
+            return $json['data'];
+        } catch (ClientException $error) {
+            $json = Utils::jsonDecode($error->getResponse()->getBody()->__toString(), true);
 
-        if ($this->return_response) return $response;
-
-        $json = Utils::jsonDecode($response->getBody()->__toString(), true);
-
-        if (!$this->unwrap) return $json;
-
-        return $json['data'];
+            if (array_key_exists('errors', $json)) {
+                throw new PaymongoException($json['errors']);
+            } else {
+                throw $error;
+            }
+        }
     }
     
     /**
