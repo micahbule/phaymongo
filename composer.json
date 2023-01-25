@@ -18,8 +18,8 @@
     ],
     "minimum-stability": "stable",
     "require-dev": {
+        "mockery/mockery": "dev-master",
         "pestphp/pest": "^1.22",
-        "pestphp/pest-plugin-mock": "^1.0",
         "pestphp/pest-plugin-parallel": "^1.2"
     },
     "config": {
@@ -28,7 +28,7 @@
         }
     },
     "scripts": {
-        "test": "./vendor/bin/pest",
+        "test": "./vendor/bin/pest --parallel",
         "test:coverage": "./vendor/bin/pest --parallel --coverage --coverage-clover coverage.xml"
     }
 }

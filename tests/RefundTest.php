@@ -13,14 +13,14 @@ it('can create a refund without optional fields', function () {
         ),
     );
 
-    $utilsMock = mock('alias:Paymongo\Phaymongo\PaymongoUtils');
+    $utilsMock = \Mockery::mock('alias:Paymongo\Phaymongo\PaymongoUtils');
     $utilsMock->shouldReceive('constructPayload')
         ->withArgs([$dummyAttributes])
         ->atLeast()
         ->times(1)
         ->andReturn($dummyPayload);
 
-    $refundMock = mock('Paymongo\Phaymongo\Refund')->makePartial();
+    $refundMock = \Mockery::mock('Paymongo\Phaymongo\Refund')->makePartial();
     $refundMock->shouldReceive('createResource')
         ->withArgs([$dummyPayload])
         ->atLeast()
@@ -47,14 +47,14 @@ it('can create a refund with optional fields', function () {
         ),
     );
 
-    $utilsMock = mock('alias:Paymongo\Phaymongo\PaymongoUtils');
+    $utilsMock = \Mockery::mock('alias:Paymongo\Phaymongo\PaymongoUtils');
     $utilsMock->shouldReceive('constructPayload')
         ->withArgs([$dummyAttributes])
         ->atLeast()
         ->times(1)
         ->andReturn($dummyPayload);
 
-    $refundMock = mock('Paymongo\Phaymongo\Refund')->makePartial();
+    $refundMock = \Mockery::mock('Paymongo\Phaymongo\Refund')->makePartial();
     $refundMock->shouldReceive('createResource')
         ->withArgs([$dummyPayload])
         ->atLeast()
@@ -67,7 +67,7 @@ it('can create a refund with optional fields', function () {
 });
 
 it('can retrieve a refund by ID', function () {
-    $refundMock = mock('Paymongo\Phaymongo\Refund')->makePartial();
+    $refundMock = \Mockery::mock('Paymongo\Phaymongo\Refund')->makePartial();
     $refundMock->shouldReceive('retrieveResourceById')
         ->withArgs([1])
         ->atLeast()

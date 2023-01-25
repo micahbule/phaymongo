@@ -17,14 +17,14 @@ it('can create a source without optional fields', function () {
         ),
     );
 
-    $utilsMock = mock('alias:Paymongo\Phaymongo\PaymongoUtils');
+    $utilsMock = \Mockery::mock('alias:Paymongo\Phaymongo\PaymongoUtils');
     $utilsMock->shouldReceive('constructPayload')
         ->withArgs([$dummyAttributes])
         ->atLeast()
         ->times(1)
         ->andReturn($dummyPayload);
 
-    $sourceMock = mock('Paymongo\Phaymongo\Source')->makePartial();
+    $sourceMock = \Mockery::mock('Paymongo\Phaymongo\Source')->makePartial();
     $sourceMock->shouldReceive('createResource')
         ->withArgs([$dummyPayload])
         ->atLeast()
@@ -55,14 +55,14 @@ it('can create a source with optional fields', function () {
         ),
     );
 
-    $utilsMock = mock('alias:Paymongo\Phaymongo\PaymongoUtils');
+    $utilsMock = \Mockery::mock('alias:Paymongo\Phaymongo\PaymongoUtils');
     $utilsMock->shouldReceive('constructPayload')
         ->withArgs([$dummyAttributes])
         ->atLeast()
         ->times(1)
         ->andReturn($dummyPayload);
 
-    $sourceMock = mock('Paymongo\Phaymongo\Source')->makePartial();
+    $sourceMock = \Mockery::mock('Paymongo\Phaymongo\Source')->makePartial();
     $sourceMock->shouldReceive('createResource')
         ->withArgs([$dummyPayload])
         ->atLeast()
@@ -75,7 +75,7 @@ it('can create a source with optional fields', function () {
 });
 
 it('can retrieve a source by ID', function () {
-    $sourceMock = mock('Paymongo\Phaymongo\Source')->makePartial();
+    $sourceMock = \Mockery::mock('Paymongo\Phaymongo\Source')->makePartial();
     $sourceMock->shouldReceive('retrieveResourceById')
         ->withArgs([1])
         ->atLeast()

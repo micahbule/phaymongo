@@ -108,7 +108,7 @@ it('can send a request and throw a client exception', function () {
 })->throws(ClientException::class);
 
 it('can create a resource', function () {
-    $client = mock('Paymongo\Phaymongo\PaymongoClient')->makePartial();
+    $client = \Mockery::mock('Paymongo\Phaymongo\PaymongoClient')->makePartial();
 
     $payload = ['data' => 'bar'];
 
@@ -127,7 +127,7 @@ it('can create a resource', function () {
 });
 
 it('can retrieve a resource by ID', function () {
-    $client = mock('Paymongo\Phaymongo\PaymongoClient')->makePartial();
+    $client = \Mockery::mock('Paymongo\Phaymongo\PaymongoClient')->makePartial();
 
     $id = 1;
 

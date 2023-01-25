@@ -19,14 +19,14 @@ it('can create a link without remarks', function () {
         ),
     );
 
-    $utilsMock = mock('alias:Paymongo\Phaymongo\PaymongoUtils');
+    $utilsMock = \Mockery::mock('alias:Paymongo\Phaymongo\PaymongoUtils');
     $utilsMock->shouldReceive('constructPayload')
         ->withArgs([$dummyAttributes])
         ->atLeast()
         ->times(1)
         ->andReturn($dummyPayload);
 
-    $linkMock = mock('Paymongo\Phaymongo\Link')->makePartial();
+    $linkMock = \Mockery::mock('Paymongo\Phaymongo\Link')->makePartial();
     $linkMock->shouldReceive('createResource')
         ->withArgs([$dummyPayload])
         ->atLeast()
@@ -55,14 +55,14 @@ it('can create a link with remarks', function () {
         ),
     );
 
-    $utilsMock = mock('alias:Paymongo\Phaymongo\PaymongoUtils');
+    $utilsMock = \Mockery::mock('alias:Paymongo\Phaymongo\PaymongoUtils');
     $utilsMock->shouldReceive('constructPayload')
         ->withArgs([$dummyAttributes])
         ->atLeast()
         ->times(1)
         ->andReturn($dummyPayload);
 
-    $linkMock = mock('Paymongo\Phaymongo\Link')->makePartial();
+    $linkMock = \Mockery::mock('Paymongo\Phaymongo\Link')->makePartial();
     $linkMock->shouldReceive('createResource')
         ->withArgs([$dummyPayload])
         ->atLeast()
@@ -75,7 +75,7 @@ it('can create a link with remarks', function () {
 });
 
 it('can retrieve a link by ID', function () {
-    $linkMock = mock('Paymongo\Phaymongo\Link')->makePartial();
+    $linkMock = \Mockery::mock('Paymongo\Phaymongo\Link')->makePartial();
     $linkMock->shouldReceive('retrieveResourceById')
         ->withArgs([1])
         ->atLeast()
@@ -85,7 +85,7 @@ it('can retrieve a link by ID', function () {
 });
 
 it('can retrieve a link by reference number', function () {
-    $linkMock = mock('Paymongo\Phaymongo\Link')->makePartial();
+    $linkMock = \Mockery::mock('Paymongo\Phaymongo\Link')->makePartial();
     $linkMock->shouldReceive('createRequest')
         ->withArgs(['GET', '/links'])
         ->atLeast()
@@ -101,7 +101,7 @@ it('can retrieve a link by reference number', function () {
 });
 
 it('can archive a link', function () {
-    $linkMock = mock('Paymongo\Phaymongo\Link')->makePartial();
+    $linkMock = \Mockery::mock('Paymongo\Phaymongo\Link')->makePartial();
     $linkMock->shouldReceive('createRequest')
         ->withArgs(['POST', '/links/1/archive'])
         ->atLeast()
@@ -117,7 +117,7 @@ it('can archive a link', function () {
 });
 
 it('can unarchive a link', function () {
-    $linkMock = mock('Paymongo\Phaymongo\Link')->makePartial();
+    $linkMock = \Mockery::mock('Paymongo\Phaymongo\Link')->makePartial();
     $linkMock->shouldReceive('createRequest')
         ->withArgs(['POST', '/links/1/unarchive'])
         ->atLeast()

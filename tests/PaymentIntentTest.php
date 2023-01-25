@@ -17,14 +17,14 @@ it('can create a payment intent without optional fields', function () {
         ),
     );
 
-    $utilsMock = mock('alias:Paymongo\Phaymongo\PaymongoUtils');
+    $utilsMock = \Mockery::mock('alias:Paymongo\Phaymongo\PaymongoUtils');
     $utilsMock->shouldReceive('constructPayload')
         ->withArgs([$dummyAttributes])
         ->atLeast()
         ->times(1)
         ->andReturn($dummyPayload);
 
-    $paymentIntentMock = mock('Paymongo\Phaymongo\PaymentIntent')->makePartial();
+    $paymentIntentMock = \Mockery::mock('Paymongo\Phaymongo\PaymentIntent')->makePartial();
     $paymentIntentMock->shouldReceive('createResource')
         ->withArgs([$dummyPayload])
         ->atLeast()
@@ -51,14 +51,14 @@ it('can create a payment intent with optional fields', function () {
         ),
     );
 
-    $utilsMock = mock('alias:Paymongo\Phaymongo\PaymongoUtils');
+    $utilsMock = \Mockery::mock('alias:Paymongo\Phaymongo\PaymongoUtils');
     $utilsMock->shouldReceive('constructPayload')
         ->withArgs([$dummyAttributes])
         ->atLeast()
         ->times(1)
         ->andReturn($dummyPayload);
 
-    $paymentIntentMock = mock('Paymongo\Phaymongo\PaymentIntent')->makePartial();
+    $paymentIntentMock = \Mockery::mock('Paymongo\Phaymongo\PaymentIntent')->makePartial();
     $paymentIntentMock->shouldReceive('createResource')
         ->withArgs([$dummyPayload])
         ->atLeast()
@@ -71,7 +71,7 @@ it('can create a payment intent with optional fields', function () {
 });
 
 it('can retrieve a payment intent by ID', function () {
-    $paymentIntentMock = mock('Paymongo\Phaymongo\PaymentIntent')->makePartial();
+    $paymentIntentMock = \Mockery::mock('Paymongo\Phaymongo\PaymentIntent')->makePartial();
     $paymentIntentMock->shouldReceive('retrieveResourceById')
         ->withArgs([1])
         ->atLeast()
@@ -91,14 +91,14 @@ it('can attach a payment method without optional fields', function () {
         ),
     );
 
-    $utilsMock = mock('alias:Paymongo\Phaymongo\PaymongoUtils');
+    $utilsMock = \Mockery::mock('alias:Paymongo\Phaymongo\PaymongoUtils');
     $utilsMock->shouldReceive('constructPayload')
         ->withArgs([$dummyAttributes])
         ->atLeast()
         ->times(1)
         ->andReturn($dummyPayload);
 
-    $paymentIntentMock = mock('Paymongo\Phaymongo\PaymentIntent')->makePartial();
+    $paymentIntentMock = \Mockery::mock('Paymongo\Phaymongo\PaymentIntent')->makePartial();
     $paymentIntentMock->shouldReceive('createRequest')
         ->withArgs(['POST', '/payment_intents/8/attach', $dummyPayload])
         ->atLeast()
@@ -129,14 +129,14 @@ it('can attach a payment method with optional fields', function () {
         ),
     );
 
-    $utilsMock = mock('alias:Paymongo\Phaymongo\PaymongoUtils');
+    $utilsMock = \Mockery::mock('alias:Paymongo\Phaymongo\PaymongoUtils');
     $utilsMock->shouldReceive('constructPayload')
         ->withArgs([$dummyAttributes])
         ->atLeast()
         ->times(1)
         ->andReturn($dummyPayload);
 
-    $paymentIntentMock = mock('Paymongo\Phaymongo\PaymentIntent')->makePartial();
+    $paymentIntentMock = \Mockery::mock('Paymongo\Phaymongo\PaymentIntent')->makePartial();
     $paymentIntentMock->shouldReceive('createRequest')
         ->withArgs(['POST', '/payment_intents/8/attach', $dummyPayload])
         ->atLeast()

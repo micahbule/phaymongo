@@ -20,14 +20,14 @@ it('can create a payment without optional fields', function () {
         ),
     );
 
-    $utilsMock = mock('alias:Paymongo\Phaymongo\PaymongoUtils');
+    $utilsMock = \Mockery::mock('alias:Paymongo\Phaymongo\PaymongoUtils');
     $utilsMock->shouldReceive('constructPayload')
         ->withArgs([$dummyAttributes])
         ->atLeast()
         ->times(1)
         ->andReturn($dummyPayload);
 
-    $paymentMock = mock('Paymongo\Phaymongo\Payment')->makePartial();
+    $paymentMock = \Mockery::mock('Paymongo\Phaymongo\Payment')->makePartial();
     $paymentMock->shouldReceive('createResource')
         ->withArgs([$dummyPayload])
         ->atLeast()
@@ -58,14 +58,14 @@ it('can create a payment with optional fields', function () {
         ),
     );
 
-    $utilsMock = mock('alias:Paymongo\Phaymongo\PaymongoUtils');
+    $utilsMock = \Mockery::mock('alias:Paymongo\Phaymongo\PaymongoUtils');
     $utilsMock->shouldReceive('constructPayload')
         ->withArgs([$dummyAttributes])
         ->atLeast()
         ->times(1)
         ->andReturn($dummyPayload);
 
-    $paymentMock = mock('Paymongo\Phaymongo\Payment')->makePartial();
+    $paymentMock = \Mockery::mock('Paymongo\Phaymongo\Payment')->makePartial();
     $paymentMock->shouldReceive('createResource')
         ->withArgs([$dummyPayload])
         ->atLeast()
@@ -78,7 +78,7 @@ it('can create a payment with optional fields', function () {
 });
 
 it('can retrieve a payment by ID', function () {
-    $paymentMock = mock('Paymongo\Phaymongo\Payment')->makePartial();
+    $paymentMock = \Mockery::mock('Paymongo\Phaymongo\Payment')->makePartial();
     $paymentMock->shouldReceive('retrieveResourceById')
         ->withArgs([1])
         ->atLeast()
@@ -88,7 +88,7 @@ it('can retrieve a payment by ID', function () {
 });
 
 it('can retrieve all payments', function () {
-    $paymentMock = mock('Paymongo\Phaymongo\Payment')->makePartial();
+    $paymentMock = \Mockery::mock('Paymongo\Phaymongo\Payment')->makePartial();
     $paymentMock->shouldReceive('createRequest')
         ->withArgs(['GET', '/payments'])
         ->atLeast()
