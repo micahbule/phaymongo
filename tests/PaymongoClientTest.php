@@ -107,6 +107,18 @@ it('can send a request and throw a client exception', function () {
     $client->sendRequest($request);
 })->throws(ClientException::class);
 
+it('can send a successful request and throw an error from the API', function () {
+    $mockHandler = new MockHandler([
+        new Response(400, ['Content-Type' => 'application/json'], '{"errors":[{"detail": "some error"}]}'),
+    ]);
+
+    $handlerStack = HandlerStack::create($mockHandler);
+    $client = new PaymongoClient('a', 'b', [], ['handler' => $handlerStack]);
+
+    $request = $client->createRequest('GET', '/');
+    $client->sendRequest($request);
+})->throws(PaymongoException::class);
+
 it('can create a resource', function () {
     $client = \Mockery::mock('Paymongo\Phaymongo\PaymongoClient')->makePartial();
 
