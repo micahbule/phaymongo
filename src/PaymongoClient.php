@@ -58,12 +58,10 @@ class PaymongoClient {
     }
 
     public function sendRequest($request, $request_opts = []) {
-        try {
-            $response = $this->client->sendRequest($request, $request_opts);
+        $final_request_opts = array_merge(['http_errors' => true], $request_opts);
 
-            if ($response->getStatusCode() >= 400) {
-                throw new ClientException('', $request, $response);
-            }
+        try {
+            $response = $this->client->send($request, $final_request_opts);
     
             if ($this->return_response) return $response;
     
