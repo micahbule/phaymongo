@@ -94,10 +94,11 @@ Takes in the Request object and executes the request to the Paymongo resource en
 * ***request_opts*** - Any Request options, if any. Refer [here for more info](https://docs.guzzlephp.org/en/stable/request-options.html).  
 ---
 ### [Payment Intent Resource](https://developers.paymongo.com/reference/the-payment-intent-object)
-#### create($amount, $payment_method_allowed, $description, $metadata)
+#### create($amount, $payment_method_allowed, $payment_method_options, $description, $metadata)
 A function to create a Paymongo payment intent object.
 * **amount** - The transaction amount.
 * **payment_method_allowed** - An array of payment method strings allowed to use. For more information on available payment methods, check [Payment Intent Resource](https://developers.paymongo.com/reference/create-a-paymentintent).
+* ***payment_method_options*** - An object containing payment method options. Used in conjunction with [Card Installments](https://developers.paymongo.com/docs/installments) feature.
 * ***description*** - The description of the transaction.
 * ***metadata*** - a JSON object where you can store any other info that you might need for integration such as transaction reference numbers.
 
@@ -105,10 +106,11 @@ A function to create a Paymongo payment intent object.
 A function to retrieve a Paymongo payment intent object by ID.
 * **id** - The payment intent ID
 
-#### attachPaymentMethod($payment_intent_id, $payment_method_id, $return_url, $client_key)
+#### attachPaymentMethod($payment_intent_id, $payment_method_id, $payment_method_options, $return_url, $client_key)
 A function to attach a Paymongo payment method to a payment intent object
 * **payment_intent_id** - The payment intent ID.
 * **payment_method_id** - The payment method ID.
+* ***payment_method_options*** - An object containing payment method options. Used in conjunction with [Card Installments](https://developers.paymongo.com/docs/installments) feature.
 * ***return_url*** - The URL where your users will be redirected to after a successful or failed payment authorization step.
 * ***client_key*** - Client key fromm payment intent if it is created using a public key -- usually a case if the payment intent was created from the frontend.
 
