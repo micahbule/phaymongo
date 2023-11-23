@@ -14,7 +14,7 @@ class PaymentIntent extends PaymongoClient {
      * @param  mixed $metadata
      * @return mixed
      */
-    public function create($amount, $payment_method_allowed, $description = null, $metadata = null, $currency = 'PHP') {
+    public function create($amount, $payment_method_allowed, $payment_method_options, $description = null, $metadata = null, $currency = 'PHP') {
         $attributes = array(
             'amount' => $amount * 100,
             'payment_method_allowed' => $payment_method_allowed,
@@ -27,6 +27,10 @@ class PaymentIntent extends PaymongoClient {
 
         if (!empty($metadata)) {
             $attributes['metadata'] = $metadata;
+        }
+
+        if (!empty($payment_method_options)) {
+            $attributes['payment_method_options'] = $payment_method_options;
         }
 
         $payload = PaymongoUtils::constructPayload($attributes);
@@ -52,7 +56,7 @@ class PaymentIntent extends PaymongoClient {
      * @param  string $client_key
      * @return mixed
      */
-    public function attachPaymentMethod($payment_intent_id, $payment_method_id, $return_url = null, $client_key = null) {
+    public function attachPaymentMethod($payment_intent_id, $payment_method_id, $payment_method_options, $return_url = null, $client_key = null) {
         $attributes = array(
             'payment_method' => $payment_method_id,
         );
@@ -63,6 +67,10 @@ class PaymentIntent extends PaymongoClient {
 
         if (!empty($return_url)) {
             $attributes['return_url'] = $return_url;
+        }
+
+        if (!empty($payment_method_options)) {
+            $attributes['payment_method_options'] = $payment_method_options;
         }
 
         $payload = PaymongoUtils::constructPayload($attributes);
